@@ -2,7 +2,7 @@
 	<div class="tab-bar-item" @click="btnClick()">
 		<slot v-if="!isActive" name="item-icon"></slot>
 		<slot v-else name="item-icon-active"></slot>
-		<slot :style="activeStyle()" name="item-text"></slot>
+		<div :style="activeStyle"><slot name="item-text"></slot></div>
 	</div>
 </template>
 
