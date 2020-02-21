@@ -3,7 +3,6 @@
 		<NavBar class="home-nav">
 			<template v-slot:center>购物车</template>
 		</NavBar>
-		<h2>首页</h2>
 		<home-swiper :banners="this.banners"/>
 	</div>
 </template>
