@@ -1,5 +1,5 @@
 <template>
-	<TabBar>
+	<TabBar class="tab-bar">
 		<TabBarItem path="/home">
 			<template #item-icon>
 				<div>
@@ -68,4 +68,7 @@
 </script>
 
 <style>
+.tab-bar{
+	z-index: 9;
+}
 </style>

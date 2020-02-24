@@ -1,5 +1,5 @@
 <template>
-  <div :style="swipeBox">
+  <div class="home-swiper" :style="swipeBox">
     <mt-swipe>
       <mt-swipe-item v-for="item in banners" :auto="4000">
         <a :href="item.link">
@@ -14,6 +14,10 @@ import { Swipe, SwipeItem } from 'mint-ui'
 
 export default {
   name:"HomeSwiper",
+  components:{
+    "mt-swipe":Swipe,
+    "mt-swipe-item":SwipeItem
+  },
   props:{
     banners:{
       type:Array,
@@ -29,10 +33,6 @@ export default {
       appHeight:0,
       proportion:0.53
     }
-  },
-  components:{
-    "mt-swipe":Swipe,
-    "mt-swipe-item":SwipeItem
   },
   created(){
     this.swipeBoxWidth=document.body.clientWidth
@@ -64,5 +64,7 @@ export default {
 }
 </script>
 <style scoped>
-
+.home-swiper{
+  padding-top: 40px;
+}
 </style>

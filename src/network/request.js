@@ -17,6 +17,7 @@ export function request(config){
 		},err=>{
 				console.log(err);
     })
-    
+		
+	//相当于返回了一个promise对象
   return instance(config)
 }
