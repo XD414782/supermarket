@@ -64,7 +64,4 @@ export default {
 }
 </script>
 <style scoped>
-.home-swiper{
-  padding-top: 40px;
-}
 </style>

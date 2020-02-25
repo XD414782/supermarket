@@ -1,8 +1,8 @@
 <template>
   <div class="wrapper" ref="wrapper">
-			<ul class="content">
+			<div class="content">
 				<slot></slot>
-			</ul>
+			</div>
 		</div>
 </template>
 <script>
@@ -15,15 +15,25 @@
     mounted(){
       // this.bs=new BScroll('.wrapper',{
       this.bs=new BScroll(this.$refs.wrapper,{
-
-        
+        probeType: 3,
+        pullUpLoad: true,
+        click:true,
       })
+      this.bs.on('scroll',(position)=>{
+        this.$emit("scroll",position)
+      })
+    },
+    methods:{
+      scrollTo(x,y,time=300){
+        this.bs.scrollTo(x,y,time)
+      }
     }
   }
 </script>
 <style scoped>
   .wrapper{
-    height: 300px;
+    /* height: 90vh; */
+    height: 84vh;
     background-color: red;
     overflow: hidden;
   }
