@@ -3,62 +3,18 @@
 		<NavBar class="home-nav">
 			<template v-slot:center>购物车</template>
 		</NavBar>
-		
-		<!-- ↓还没写这个部分 -->
-		<!-- <goods-list :goods="goods['pop'].list"></goods-list> -->
-		<scroll class="scroll" ref="wrapper" @scroll="scrollShowControll">
+		<scroll 
+		class="scroll" 
+		ref="wrapper" 
+		@scroll="scrollShowControll"
+		@pullingUp="loadMore()">
 			<home-swiper :banners="this.banners"/>
-			<TabControl class="home-tab-control" :titles="titles"></TabControl>
-			<div>as1</div>
-			<div>as2</div>
-			<div>as3</div>
-			<div>as4</div>
-			<div>as5</div>
-			<div>as6</div>
-			<div>as7</div>
-			<div>as8</div>
-			<div>as9</div>
-			<div>as10</div>
-			<div>as11</div>
-			<div>as12</div>
-			<div>as13</div>
-			<div>as14</div>
-			<div>as15</div>
-			<div>as16</div>
-			<div>as17</div>
-			<div>as18</div>
-			<div>as19</div>
-			<div>as20</div>
-			<div>as21</div>
-			<div>as22</div>
-			<div>as23</div>
-			<div>as24</div>
-			<div>as25</div>
-			<div>as26</div>
-			<div>as27</div>
-			<div>as28</div>
-			<div>as29</div>
-			<div>as30</div>
-			<div>as31</div>
-			<div>as32</div>
-			<div>as33</div>
-			<div>as34</div>
-			<div>as35</div>
-			<div>as36</div>
-			<div>as37</div>
-			<div>as38</div>
-			<div>as39</div>
-			<div>as40</div>
-			<div>as41</div>
-			<div>as42</div>
-			<div>as43</div>
-			<div>as44</div>
-			<div>as45</div>
-			<div>as46</div>
-			<div>as47</div>
-			<div>as48</div>
-			<div>as49</div>
-			<div>as50</div>
+			<TabControl 
+			@tabClick="tabClick"
+			class="home-tab-control" 
+			:titles="titles">
+			</TabControl>
+			<GoodsList :type="type" :goods="goods"></GoodsList>
 		</scroll>
 		<BackTop v-show="isBackTopShow" class="back-top" @click.native="backClick"/>
 	</div>
@@ -70,6 +26,7 @@
 	import TabControl from '@/components/content/tabControl/TabControl.vue'
 	import Scroll from '@/components/common/scroll/Scroll.vue'
 	import BackTop from '@/components/content/backTop/BackTop.vue'
+	import GoodsList from './childCompos/GoodsList.vue'
 
 	import {getHomeMultidata} from '@/network/home.js'
 	
@@ -81,10 +38,11 @@
 				recommends:[],
 				titles:['流行',"新款","精选"],
 				goods:{
-					'pop':{page:0,list:[]},
-					'news':{page:0,list:[]},
-					'sell':{page:0,list:[]},
+					'pop':{page:0,list:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,]},
+					'news':{page:0,list:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]},
+					'sell':{page:0,list:[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,]},
 				},
+				type:"pop",
 				isBackTopShow:false
 			}
 		},
@@ -93,18 +51,21 @@
 			HomeSwiper,
 			TabControl,
 			"scroll":Scroll,
-			BackTop
+			BackTop,
+			GoodsList
 		},
 		created(){
-			getHomeMultidata()
-			.then(res=>{
-				console.log(res)
-				this.banners=res.data.banner.list
-				this.recommends=res.data.recommend.list
-				console.log(this.banners);
-				
+			this.getHomeMultidata()
+			
+			this.getHomeGoods("pop")
+			this.getHomeGoods("news")
+			this.getHomeGoods("sell")
+		},
+		mounted(){
+			//另外一部分在GoodsList.vue里
+			this.$bus.$on("divOnload",()=>{
+				this.$refs.wrapper.bs.refresh()
 			})
-			.catch(err=>console.log(err))
 		},
 		methods:{
 			backClick(){
@@ -112,6 +73,44 @@
 			},
 			scrollShowControll(position){
 				position.y > -100?this.isBackTopShow=false:this.isBackTopShow=true
+			},
+			getHomeMultidata(){
+				getHomeMultidata().then(res=>{
+					console.log(res)
+					this.banners=res.data.banner.list
+					this.recommends=res.data.recommend.list
+					console.log(this.banners);
+				})
+				.catch(err=>console.log(err))
+			},
+			tabClick(index){
+				console.log("进入tabClick"+index,"←是index");
+				
+				switch(index){
+					case 0:
+						this.type='pop'
+						break
+					case 1:
+						this.type='news'
+						break
+					case 2:
+						this.type='sell'
+						break
+				}
+			},
+			getHomeGoods(type){
+				const page=this.goods[type].page+1
+				this.goods[type].list.push(...[1,2,3,4])
+			},
+			loadMore(){
+				console.log("上拉加载更多");
+
+				// this.$refs.wrapper.bs.finishPullUp()在scroll.vue里
+				this.getHomeGoods(this.type)
+				//非常尽力了 但是还是刷新不了
+				// this.$refs.wrapper.bs.refresh()在scroll.vue里
+				
+				
 			}
 		}
 	}
@@ -138,4 +137,5 @@
 .scroll{
 	margin-top: 44px;
 }
+
 </style>

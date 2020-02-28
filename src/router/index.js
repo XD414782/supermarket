@@ -4,6 +4,7 @@ const Home =()=> import ('@/views/home/Home.vue')
 const Profile =()=> import ('@/views/profile/Profile.vue')
 const Menu =()=> import ('@/views/menu/Menu.vue')
 const Cart =()=> import ('@/views/cart/Cart.vue')
+const Detail =()=> import ('@/views/detail/Detail.vue')
 
 Vue.use(VueRouter)
 
@@ -27,6 +28,11 @@ const routes = [
 	{
 		path:"/menu",
 		component:Menu
+	},
+	{
+		// path:"/detail/:index",
+		path:"/detail",
+		component:Detail
 	}
 	
 ]
